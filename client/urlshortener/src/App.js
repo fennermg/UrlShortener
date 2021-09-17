@@ -1,6 +1,6 @@
-import React, { Fragment } from "react";
+import React from "react";
 import { BrowserRouter as Router, Switch, Route } from "react-router-dom";
-import Admin from "./components/Admin";
+// import Admin from "./components/Admin";
 import Index from "./components/Index";
 import LongUrl from "./components/LongUrl";
 

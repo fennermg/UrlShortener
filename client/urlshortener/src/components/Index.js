@@ -1,15 +1,37 @@
 import React, { Fragment, useState } from "react";
+import axios from "axios";
 
 const Index = () => {
+  const [longUrl, setlongUrl] = useState("");
+  const [shortUrl, setshortUrl] = useState("Your short url will be displayed here...");
 
-    const [longUrl, setlongUrl] = useState("");
-    const [send, setsend] = useState(false);
+  const onChange = (e) => {
+    setlongUrl(e.target.value);
+  };
 
+  const onSubmit = (e) => {
+    e.preventDefault();
+    fethAPI();
+  };
 
-    const onChange = (e)=>{
-        setlongUrl(e.target.value)
-    }
+  const fethAPI = async () => {
+    await axios({
+      method: "post",
+      url: "http://localhost:5000/api/url/shorten",
+      data: {
+        "longUrl": longUrl
+      },
+      headers: { "Content-Type": "application/json" },
+    })
+      .then(function (response) {
+        setshortUrl(window.location.href + response.data.urlCode)
 
+      })
+      .catch(function (error) {
+        alert(error.response.data.msg);
+
+      });
+  };
 
   return (
     <Fragment>
@@ -20,7 +42,7 @@ const Index = () => {
           </a>
 
           <div className="d-flex">
-            <a className="navbar-brand" href="#">
+            <a className="navbar-brand" href="/">
               Log in
             </a>
           </div>
@@ -28,7 +50,7 @@ const Index = () => {
       </nav>
 
       <div className="container mt-5">
-        <form>
+        <form onSubmit={onSubmit}>
           <label htmlFor="longUrl" className="form-label">
             Long Url:
           </label>
@@ -36,13 +58,14 @@ const Index = () => {
           <div className="d-flex align-items-center row justify-content-center">
             <div className="col-10">
               <input
-                type="email"
+                type="text"
                 className="form-control"
                 id="longUrl"
                 name="longUrl"
                 value={longUrl}
                 onChange={onChange}
                 placeholder="example: google.com"
+                required
               />
             </div>
 
@@ -60,7 +83,8 @@ const Index = () => {
             className="form-control"
             type="text"
             id="shortUrl"
-            value="Your short url will be displayed here..."
+            name="shortUrl"
+            value={shortUrl}
             aria-label="readonly input example"
             readOnly
           />
