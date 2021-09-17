@@ -12,6 +12,10 @@ router.get('/:code', async(req,res)=>{
 
         if (url) {
             res.json(url)
+
+            url.visits++;
+
+            await url.save();
         }else{
             return res.status(404).json({"msg":"Not found"});
         }
