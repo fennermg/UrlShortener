@@ -1,6 +1,7 @@
 import React, { Fragment, useEffect, useState } from "react";
 import Index from "./Index";
 import axios from "axios";
+import {verifyTokenService} from "../services/api"
 import { useHistory } from "react-router-dom";
 
 const Admin = () => {
@@ -23,15 +24,7 @@ const Admin = () => {
   };
 
   const verifyToken = async () => {
-    await axios({
-      method: "get",
-      url: "http://localhost:5000/api/auth/me",
-
-      headers: {
-        "Content-Type": "application/json",
-        Authorization: `Bearer ${token}`,
-      },
-    })
+    await verifyTokenService(token)
       .then(function (response) {
         setLogged(true);
       })

@@ -1,6 +1,7 @@
 import React, { Fragment, useState } from "react";
 import axios from "axios";
 import { useHistory } from "react-router-dom";
+import {fethAPIService} from "../services/api"
 
 const Login = () => {
   const history = useHistory();
@@ -24,15 +25,7 @@ const Login = () => {
   };
 
   const fethAPI = async () => {
-    await axios({
-      method: "post",
-      url: "http://localhost:5000/api/auth",
-      data: {
-        user: data.user,
-        password: data.password,
-      },
-      headers: { "Content-Type": "application/json" },
-    })
+    await fethAPIService(data)
       .then(function (response) {
         const { token } = response.data;
         localStorage.setItem("token", token);

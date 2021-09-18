@@ -1,5 +1,6 @@
 import React, { Fragment, useState } from "react";
 import axios from "axios";
+import {sendPostRequestService} from "../services/api"
 
 const Index = () => {
   const [longUrl, setlongUrl] = useState("");
@@ -11,18 +12,11 @@ const Index = () => {
 
   const onSubmit = (e) => {
     e.preventDefault();
-    fethAPI();
+    sendPostRequest();
   };
 
-  const fethAPI = async () => {
-    await axios({
-      method: "post",
-      url: "http://localhost:5000/api/url/shorten",
-      data: {
-        "longUrl": longUrl
-      },
-      headers: { "Content-Type": "application/json" },
-    })
+  const sendPostRequest = async () => {
+    await sendPostRequestService(longUrl)
       .then(function (response) {
         setshortUrl(window.location.href + response.data.urlCode)
 
@@ -35,6 +29,7 @@ const Index = () => {
 
   return (
     <Fragment>
+      
       <nav className="navbar navbar-expand-lg navbar-light bg-light">
         <div className="container-fluid">
           <a className="navbar-brand" href="/">
