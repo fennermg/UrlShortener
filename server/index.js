@@ -14,6 +14,7 @@ app.use(express.json({ extented: false }));
 //Routes
 app.use('/', require('./routes/index'));
 app.use('/api/url', require('./routes/url'));
+app.use('/api/auth', require('./routes/auth'));
 
 
 
