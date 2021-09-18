@@ -4,15 +4,16 @@ const config = require('config');
 exports.authUser = (req, res) =>{
 
     const {user,password} = req.body;
+    console.log(req.body);
 
     //Here will be the connection to database to check for the user but since is not required a default user is used.
 
 
-    if (req.body.user !== config.get('defaultUser')) {
+    if (user != config.get('defaultUser')) {
         return res.status(401).json({ msg: "Invalid user" });
     }
 
-    if (req.body.password !== config.get('defaultPassword')) {
+    if (password != config.get('defaultPassword')) {
         return res.status(401).json({ msg: "Invalid password" });
     }
 
@@ -26,8 +27,12 @@ exports.authUser = (req, res) =>{
     }, (error, token)=>{
         if(error) throw error;
 
-        res.json({token});
+        res.json({token,user});
     })
 
+}
+
+exports.me =(req,res)=>{
+    res.json(req.user);
 }
 

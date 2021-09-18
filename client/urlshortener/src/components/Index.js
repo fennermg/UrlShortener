@@ -42,7 +42,7 @@ const Index = () => {
           </a>
 
           <div className="d-flex">
-            <a className="navbar-brand" href="/">
+            <a className="navbar-brand" href="/admin/login">
               Log in
             </a>
           </div>
