@@ -1,8 +1,12 @@
-import React, { Fragment, useState } from "react";
+import React, { Fragment, useState, useContext, useEffect } from "react";
 import { useHistory } from "react-router-dom";
-import {fethAPIService} from "../services/api"
+import { fethAPIService } from "../services/api";
+import { AuthContext } from "../context/AuthContext";
+import { verifyTokenService } from "../services/api";
 
 const Login = () => {
+  const { logged, setlogged } = useContext(AuthContext);
+  const [token, setToken] = useState("");
   const history = useHistory();
   const [data, setdata] = useState({
     user: "",
@@ -28,14 +32,42 @@ const Login = () => {
       .then(function (response) {
         const { token } = response.data;
         localStorage.setItem("token", token);
-        history.push('/admin/dashboard');
+        history.push("/admin/dashboard");
       })
       .catch(function (error) {
         alert(error.response.data.msg);
       });
   };
 
-  return (
+  useEffect(() => {
+    verifyLogged();
+  }, []);
+
+  useEffect(() => {
+    if (token) {
+      verifyToken();
+    }
+  }, [token]);
+
+  const verifyLogged = async () => {
+    setToken(localStorage.getItem("token"));
+  };
+
+  const verifyToken = async () => {
+    await verifyTokenService(token)
+      .then(function (response) {
+        setlogged(true);
+        history.push("/admin/dashboard");
+      })
+      .catch(function (error) {
+        localStorage.removeItem("token");
+        history.push("/admin/login");
+      });
+  };
+
+  return logged ? (
+    <></>
+  ) : (
     <Fragment>
       <nav className="navbar navbar-expand-lg navbar-light bg-light">
         <div className="container-fluid">

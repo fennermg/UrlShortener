@@ -4,6 +4,7 @@ import Admin from "./components/Admin";
 import Index from "./components/Index";
 import Login from "./components/Login";
 import LongUrl from "./components/LongUrl";
+import NotFound from "./components/NotFound";
 import AuthProvider from "./context/AuthContext";
 
 function App() {
@@ -15,6 +16,7 @@ function App() {
           <Route exact path="/:code" component={LongUrl} />
           <Route exact path="/admin/login" component={Login} />
           <Route exact path="/admin/dashboard" component={Admin} />
+          <Route path="*" component={NotFound} />
         </Switch>
       </Router>
     </AuthProvider>

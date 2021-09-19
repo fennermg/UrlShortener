@@ -1,6 +1,6 @@
 import React, { Fragment, useEffect, useState, useContext } from "react";
 import { verifyTokenService } from "../services/api";
-import { useHistory } from "react-router-dom";
+import { useHistory , Redirect} from "react-router-dom";
 import Nav from "./Nav";
 import { AuthContext } from "../context/AuthContext";
 import MainForm from "./MainForm";
@@ -45,7 +45,7 @@ const Admin = () => {
       <Table />
     </Fragment>
   ) : (
-    <></>
+    <Redirect to="/admin/login" />
   );
 };
 
