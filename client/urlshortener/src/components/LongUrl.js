@@ -1,7 +1,6 @@
 import React, { useEffect } from "react";
 import { useParams } from "react-router";
 import {getLongUrlService} from "../services/api"
-import axios from "axios";
 
 const LongUrl = () => {
   let { code } = useParams();

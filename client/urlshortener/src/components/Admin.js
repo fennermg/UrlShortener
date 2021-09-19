@@ -1,12 +1,14 @@
-import React, { Fragment, useEffect, useState } from "react";
-import Index from "./Index";
-import axios from "axios";
-import {verifyTokenService} from "../services/api"
+import React, { Fragment, useEffect, useState, useContext } from "react";
+import { verifyTokenService } from "../services/api";
 import { useHistory } from "react-router-dom";
+import Nav from "./Nav";
+import { AuthContext } from "../context/AuthContext";
+import MainForm from "./MainForm";
+import Table from "./Table";
 
 const Admin = () => {
   const history = useHistory();
-  const [logged, setLogged] = useState(false);
+  const { logged, setlogged } = useContext(AuthContext);
   const [token, setToken] = useState("");
 
   useEffect(() => {
@@ -26,21 +28,21 @@ const Admin = () => {
   const verifyToken = async () => {
     await verifyTokenService(token)
       .then(function (response) {
-        setLogged(true);
+        setlogged(true);
       })
       .catch(function (error) {
-        console.log(error);
+        localStorage.removeItem("token");
         history.push("/admin/login");
       });
   };
 
   return logged ? (
     <Fragment>
-      <Index />
+      <Nav />
 
-      <h1>Admin mode</h1>
+      <MainForm />
 
-      <h2>Aqui va la tabla :v</h2>
+      <Table />
     </Fragment>
   ) : (
     <></>

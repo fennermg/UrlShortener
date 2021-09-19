@@ -1,92 +1,45 @@
-import React, { Fragment, useState, useContext } from "react";
-import axios from "axios";
-import {sendPostRequestService} from "../services/api"
+import React, { Fragment, useContext, useState, useEffect } from "react";
+import Nav from "./Nav";
+import MainForm from "./MainForm";
 import { AuthContext } from "../context/AuthContext";
+import { Redirect } from "react-router-dom";
+import { verifyTokenService } from "../services/api";
 
 const Index = () => {
-  const{logged}= useContext(AuthContext);
-  const [longUrl, setlongUrl] = useState("");
-  const [shortUrl, setshortUrl] = useState("Your short url will be displayed here...");
+  const { logged, setlogged } = useContext(AuthContext);
+  const [token, setToken] = useState("");
 
-  const onChange = (e) => {
-    setlongUrl(e.target.value);
+  useEffect(() => {
+    verifyLogged();
+  }, []);
+
+  useEffect(() => {
+    if (token) {
+      verifyToken();
+    }
+  }, [token]);
+
+  const verifyLogged = async () => {
+    setToken(localStorage.getItem("token"));
   };
 
-  const onSubmit = (e) => {
-    e.preventDefault();
-    sendPostRequest();
-  };
-
-  const sendPostRequest = async () => {
-    await sendPostRequestService(longUrl)
+  const verifyToken = async () => {
+    await verifyTokenService(token)
       .then(function (response) {
-        setshortUrl(window.location.href + response.data.urlCode)
-
+        setlogged(true);
       })
       .catch(function (error) {
-        alert(error.response.data.msg);
-
+        localStorage.removeItem("token");
       });
   };
 
-  return (
+  return logged ? (
+    <Redirect to="/admin/dashboard" />
+  ) : (
     <Fragment>
-      
-      <nav className="navbar navbar-expand-lg navbar-light bg-light">
-        <div className="container-fluid">
-          <a className="navbar-brand" href="/">
-            URL Reducer
-          </a>
+      <Nav />
 
-          <div className="d-flex">
-            <a className="navbar-brand" href="/admin/login">
-              Log in
-            </a>
-          </div>
-        </div>
-      </nav>
-
-      <div className="container mt-5">
-        <form onSubmit={onSubmit}>
-          <label htmlFor="longUrl" className="form-label">
-            Long Url:
-          </label>
-
-          <div className="d-flex align-items-center row justify-content-center">
-            <div className="col-10">
-              <input
-                type="text"
-                className="form-control"
-                id="longUrl"
-                name="longUrl"
-                value={longUrl}
-                onChange={onChange}
-                placeholder="example: google.com"
-                required
-              />
-            </div>
-
-            <button type="submit" className="btn btn-primary col-2">
-              Send
-            </button>
-          </div>
-        </form>
-
-        <div className="mt-5">
-          <label htmlFor="shortUrl" className="form-label">
-            Short Url:
-          </label>
-          <input
-            className="form-control"
-            type="text"
-            id="shortUrl"
-            name="shortUrl"
-            value={shortUrl}
-            aria-label="readonly input example"
-            readOnly
-          />
-        </div>
-      </div>
+      <MainForm />
     </Fragment>
   );
 };
