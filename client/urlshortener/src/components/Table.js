@@ -1,38 +1,63 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
+import axios from "axios";
 
 const Table = () => {
-  return (
-    <div class="container mt-5">
+  const [token, setToken] = useState("");
+  const [table, settable] = useState([]);
+
+  useEffect(() => {
+    setToken(localStorage.getItem("token"));
+  }, []);
+
+  useEffect(() => {
+    if (token) {
+      getTable();
+    }
+  }, [token]);
+
+  const getTable = async () => {
+    await axios({
+      method: "get",
+      url: `http://localhost:5000/api/toplist`,
+
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${token}`,
+      },
+    })
+      .then(function (response) {
+        settable(response.data);
+      })
+      .catch(function (error) {
+        alert(error.response.data);
+      });
+  };
+
+  return table ? (
+    <div className="container mt-5">
       <h3>Most visited</h3>
-      <table class="table">
+      <table className="table mt-3">
         <thead>
           <tr>
-            <th scope="col">#</th>
-            <th scope="col">First</th>
-            <th scope="col">Last</th>
-            <th scope="col">Handle</th>
+            <th scope="col">Long Url</th>
+            <th scope="col">Visits</th>
+            <th scope="col">Short Url</th>
           </tr>
         </thead>
         <tbody>
-          <tr>
-            <th scope="row">1</th>
-            <td>Mark</td>
-            <td>Otto</td>
-            <td>@mdo</td>
-          </tr>
-          <tr>
-            <th scope="row">2</th>
-            <td>Jacob</td>
-            <td>Thornton</td>
-            <td>@fat</td>
-          </tr>
-          <tr>
-            <th scope="row">3</th>
-            <td colspan="2">Larry the Bird</td>
-            <td>@twitter</td>
-          </tr>
+          {table.map((row) => (
+            <tr key={row._id}>
+              <td>{row.longUrl}</td>
+              <td>{row.visits}</td>
+              <td>{process.env.REACT_APP_FRONTEND_URL + "/" + row.urlCode}</td>
+            </tr>
+          ))}
         </tbody>
       </table>
+    </div>
+  ) : (
+    <div className="container mt-5">
+      <h3>Loading...</h3>
     </div>
   );
 };
