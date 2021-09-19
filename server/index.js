@@ -15,6 +15,7 @@ app.use(express.json({ extented: false }));
 app.use('/', require('./routes/index'));
 app.use('/api/url', require('./routes/url'));
 app.use('/api/auth', require('./routes/auth'));
+app.use('/api/toplist', require('./routes/toplist'));
 
 
 
