@@ -1,8 +1,10 @@
-import React, { Fragment, useState } from "react";
+import React, { Fragment, useState, useContext } from "react";
 import axios from "axios";
 import {sendPostRequestService} from "../services/api"
+import { AuthContext } from "../context/AuthContext";
 
 const Index = () => {
+  const{logged}= useContext(AuthContext);
   const [longUrl, setlongUrl] = useState("");
   const [shortUrl, setshortUrl] = useState("Your short url will be displayed here...");
 

@@ -4,9 +4,11 @@ import Admin from "./components/Admin";
 import Index from "./components/Index";
 import Login from "./components/Login";
 import LongUrl from "./components/LongUrl";
+import AuthProvider from "./context/AuthContext";
 
 function App() {
   return (
+    <AuthProvider>
       <Router>
         <Switch>
           <Route exact path="/" component={Index} />
@@ -15,6 +17,7 @@ function App() {
           <Route exact path="/admin/dashboard" component={Admin} />
         </Switch>
       </Router>
+    </AuthProvider>
   );
 }
 
