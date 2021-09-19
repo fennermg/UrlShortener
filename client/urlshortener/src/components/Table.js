@@ -1,10 +1,11 @@
 import React, { useEffect, useState } from "react";
-import axios from "axios";
+import { useHistory } from "react-router-dom";
+import { getTableService } from "../services/api";
 
 const Table = () => {
   const [token, setToken] = useState("");
   const [table, settable] = useState([]);
-
+  const history = useHistory();
   useEffect(() => {
     setToken(localStorage.getItem("token"));
   }, []);
@@ -16,24 +17,18 @@ const Table = () => {
   }, [token]);
 
   const getTable = async () => {
-    await axios({
-      method: "get",
-      url: `http://localhost:5000/api/toplist`,
-
-      headers: {
-        "Content-Type": "application/json",
-        Authorization: `Bearer ${token}`,
-      },
-    })
+    await getTableService(token)
       .then(function (response) {
         settable(response.data);
       })
       .catch(function (error) {
         alert(error.response.data);
+        localStorage.removeItem("token");
+        history.push("/admin/login");
       });
   };
 
-  return table ? (
+  return table.length != 0 ? (
     <div className="container mt-5">
       <h3>Most visited</h3>
       <table className="table mt-3">
@@ -41,7 +36,7 @@ const Table = () => {
           <tr>
             <th scope="col">Long Url</th>
             <th scope="col">Visits</th>
-            <th scope="col">Short Url</th>
+            <th scope="col">Url Code</th>
           </tr>
         </thead>
         <tbody>
@@ -49,7 +44,7 @@ const Table = () => {
             <tr key={row._id}>
               <td>{row.longUrl}</td>
               <td>{row.visits}</td>
-              <td>{process.env.REACT_APP_FRONTEND_URL + "/" + row.urlCode}</td>
+              <td>{row.urlCode}</td>
             </tr>
           ))}
         </tbody>
@@ -57,7 +52,7 @@ const Table = () => {
     </div>
   ) : (
     <div className="container mt-5">
-      <h3>Loading...</h3>
+      <h3>No Data</h3>
     </div>
   );
 };

@@ -49,3 +49,15 @@ export const getLongUrlService = async (code) => {
 };
 
 
+
+export const getTableService = async (token) => {
+  return axios({
+    method: "get",
+    url: `${baseUrl}/api/toplist`,
+
+    headers: {
+      "Content-Type": "application/json",
+      Authorization: `Bearer ${token}`,
+    },
+  })
+};
